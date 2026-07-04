@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎢 Super Minds 4 — Welcome / Starter Unit</title>
+<style>
+:root{--gold:#c9a227;--navy:#1a2e5a;--bg:#fdf6e3;--card:#fffdf7;--green:#1e6e30;--red:#922020;--blue:#1a3a8e;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg);color:#2d2d2d;min-height:100vh;}
+header{background:linear-gradient(160deg,#1b0a3e,#2d1a6e,#4a2a9e);color:#fff;padding:24px 20px;text-align:center;border-bottom:4px solid var(--gold);}
+header h1{font-size:clamp(1.5em,5vw,2.4em);color:var(--gold);margin-bottom:4px;}
+header p{font-size:.9em;color:rgba(255,255,255,.7);}
+.sticky{position:sticky;top:0;z-index:100;background:#2d1a4e;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.score-badge{background:rgba(201,162,39,.2);border:2px solid var(--gold);border-radius:20px;padding:4px 12px;color:var(--gold);font-weight:700;font-size:.9em;}
+.tabs{display:flex;flex-wrap:wrap;gap:3px;}
+.tab{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font-size:.72em;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.tab:hover{background:rgba(255,255,255,.2);}
+.tab.active{border-color:#fff;box-shadow:0 0 6px rgba(255,255,255,.5);}
+.tab.done{background:var(--gold);border-color:var(--gold);color:#1a1a2e;}
+main{max-width:860px;margin:12px auto 40px;padding:0 14px;}
+.ex{display:none;background:var(--card);border-radius:14px;border:2px solid rgba(201,162,39,.25);box-shadow:0 4px 20px rgba(0,0,0,.08);margin-top:12px;overflow:hidden;animation:fadeIn .3s ease;}
+.ex.show{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.ex-head{background:linear-gradient(135deg,#2d1a6e,#4a2a9e);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;}
+.ex-num{background:var(--gold);color:#1a1a2e;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+.ex-head h2{font-size:1.05em;color:var(--gold);}
+.ex-head small{font-size:.8em;color:rgba(255,255,255,.6);display:block;}
+.ex-body{padding:18px;}
+.audio-wrap{margin-bottom:14px;}
+.audio-wrap audio{width:100%;border-radius:8px;}
+.audio-label{font-size:.8em;color:#888;margin-bottom:4px;}
+.instruct{background:#edf2ff;border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:9px 12px;font-size:.88em;color:var(--blue);margin-bottom:14px;line-height:1.5;}
+.fb{margin-top:10px;padding:10px 14px;border-radius:8px;font-weight:600;font-size:.88em;display:none;line-height:1.4;}
+.fb.ok{background:#e8f5e9;color:var(--green);border:2px solid #a5d6a7;display:block;}
+.fb.part{background:#fff8e1;color:#856404;border:2px solid #ffe082;display:block;}
+.fb.bad{background:#ffebee;color:var(--red);border:2px solid #ef9a9a;display:block;}
+.btn{background:linear-gradient(135deg,#2d1a6e,#4a2a9e);color:#fff;border:none;border-radius:22px;padding:9px 22px;font-size:.9em;font-weight:700;cursor:pointer;transition:all .2s;margin-top:10px;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(45,26,110,.3);}
+.nav{display:flex;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid #eee;}
+.nav-btn{background:transparent;border:2px solid var(--gold);color:#5c3d1a;border-radius:18px;padding:7px 16px;cursor:pointer;font-size:.88em;font-weight:600;transition:all .2s;}
+.nav-btn:hover{background:var(--gold);color:#1a1a2e;}
+.nav-btn.fwd{background:var(--gold);color:#1a1a2e;}
+.spell-area{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;justify-content:center;}
+.spell-slot{width:38px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.3em;font-weight:700;border:2px dashed #ccc;background:#f9f9f9;transition:all .2s;}
+.spell-slot.filled{border:2px solid var(--green);background:#e8f5e9;color:var(--green);}
+.spell-slot.wrong{border:2px solid var(--red);background:#ffebee;color:var(--red);animation:shake .4s;}
+.spell-slot.space{width:14px;border:none;background:transparent;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+.letter-bank{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:8px 0;}
+.letter-btn{width:36px;height:36px;border-radius:8px;background:#fff;border:2px solid #ddd;color:#333;font-size:1.1em;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.letter-btn:hover{border-color:var(--gold);background:#fff8e1;}
+.letter-btn.used{opacity:.25;pointer-events:none;}
+.mc-item{background:#f9f9f9;border:2px solid #e8e8e8;border-radius:10px;padding:11px 13px;margin-bottom:9px;}
+.mc-item.ok{border-color:#81c784;background:#e8f5e9;}
+.mc-item.bad{border-color:#ef9a9a;background:#ffebee;}
+.mc-q{font-size:.9em;font-weight:600;margin-bottom:7px;line-height:1.4;}
+.mc-opts{display:flex;flex-wrap:wrap;gap:6px;}
+.mc-opt{background:#fff;border:2px solid #ccc;border-radius:18px;padding:4px 13px;cursor:pointer;font-size:.85em;transition:all .2s;}
+.mc-opt:hover{border-color:var(--blue);}
+.mc-opt.sel{background:var(--blue);color:#fff;border-color:var(--blue);}
+.mc-opt.right{background:var(--green);color:#fff;border-color:var(--green);}
+.mc-opt.wrong{background:var(--red);color:#fff;border-color:var(--red);}
+.gap-sentence{background:#f9f9f9;border:2px solid #e8e8e8;border-radius:10px;padding:10px 13px;margin-bottom:8px;font-size:.9em;line-height:1.6;}
+.gap-input{border:none;border-bottom:2px solid var(--gold);background:rgba(201,162,39,.08);padding:2px 8px;font-size:.95em;width:110px;text-align:center;outline:none;font-family:inherit;border-radius:3px;}
+.gap-input:focus{border-color:var(--blue);}
+.gap-input.ok{border-color:var(--green);background:#e8f5e9;}
+.gap-input.bad{border-color:var(--red);background:#ffebee;}
+.tf-row{display:flex;align-items:center;gap:8px;background:#f9f9f9;border:2px solid #e8e8e8;border-radius:8px;padding:8px 11px;margin-bottom:6px;}
+.tf-row.ok{border-color:#81c784;background:#e8f5e9;}
+.tf-row.bad{border-color:#ef9a9a;background:#ffebee;}
+.tf-q{flex:1;font-size:.86em;line-height:1.4;}
+.tf-btn{width:30px;height:30px;border-radius:50%;font-weight:700;font-size:.72em;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.tf-t{border:2px solid var(--green);color:var(--green);background:#fff;}
+.tf-f{border:2px solid var(--red);color:var(--red);background:#fff;}
+.tf-t:hover,.tf-t.on{background:var(--green);color:#fff;}
+.tf-f:hover,.tf-f.on{background:var(--red);color:#fff;}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+.m-left,.m-right{display:flex;flex-direction:column;gap:6px;}
+.m-btn{padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.85em;font-weight:600;transition:all .2s;text-align:center;}
+.m-btn.left{background:#e3f0ff;border:2px solid #90b4e8;color:var(--blue);}
+.m-btn.right{background:#fff3e0;border:2px solid #ffcc80;color:#5c3d1a;}
+.m-btn:hover{transform:scale(1.03);}
+.m-btn.sel{background:var(--navy);color:#fff;border-color:var(--navy);}
+.m-btn.done{background:#e8f5e9;color:var(--green);border-color:#81c784;pointer-events:none;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:12px;}
+.vocab-card{background:#f0f4ff;border:2px solid #bdd4ff;border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all .2s;}
+.vocab-card:hover{border-color:var(--blue);transform:scale(1.03);}
+.vocab-card .emoji{font-size:1.6em;display:block;margin-bottom:4px;}
+.vocab-card .word{font-weight:700;color:var(--navy);font-size:.85em;}
+#results{display:none;text-align:center;padding:30px;background:var(--card);border-radius:14px;border:2px solid rgba(201,162,39,.3);margin-top:12px;max-width:860px;margin-left:auto;margin-right:auto;padding-left:14px;padding-right:14px;}
+.r-icon{font-size:4em;display:block;margin-bottom:12px;}
+.r-title{font-size:1.8em;color:var(--gold);margin-bottom:8px;}
+.r-score{font-size:1.4em;color:var(--navy);margin-bottom:6px;}
+.r-stars{font-size:2em;margin-bottom:6px;}
+.r-msg{color:#555;margin-bottom:20px;}
+@media(max-width:500px){.match-grid{grid-template-columns:1fr;}.vocab-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<header>
+<h1>🎢 Welcome / Starter Unit</h1>
+<p>Super Minds 4 · CD1 Tracks 2–11 · Practice Activities</p>
+</header>
+<div class="sticky">
+<div class="score-badge">✅ <span id="sc">0</span>/9</div>
+<div class="tabs" id="tabs"></div>
+</div>
+<main id="main"></main>
+<div id="results">
+<span class="r-icon" id="ri"></span>
+<div class="r-title" id="rt"></div>
+<div class="r-stars" id="rs"></div>
+<div class="r-score" id="rsc"></div>
+<div class="r-msg" id="rm"></div>
+<button class="btn" onclick="location.reload()">🔄 Try Again</button>
+</div>
+
+<script>
+const EXERCISES = [
+  // 1: Track 2 - Vocabulary
+  { track:2, title:"Vocabulary: Fun Fair & Media", page:"Student's Book p.4",
+    type:"spell", words:["big wheel","roller coaster","roundabout","dodgem cars","microphone","band","photographer","journalist"] },
+  // 2: Track 3 - Listening comprehension
+  { track:3, title:"Listening: Welcome Ceremony", page:"Student's Book p.4",
+    type:"tf", intro:"Listen to the welcome ceremony at the museum. Then decide True or False.",
+    items:[
+      {q:"The children give a golden statue to the museum.", ans:true},
+      {q:"A photographer wants to take a photo of Ben and Lucy.", ans:true},
+      {q:"A journalist wants to write about them on TV.", ans:false},
+      {q:"They eat hot dogs and drink orange juice.", ans:true},
+      {q:"Ben wants to try the roller coaster first.", ans:true},
+    ]},
+  // 3: Track 4 - Interview comprehension
+  { track:4, title:"Listening: Interview with Ben", page:"Student's Book p.5",
+    type:"mc", items:[
+      {q:"Does Ben like going on adventures?", opts:["Yes, he does","No, he doesn't","He's not sure"], ans:"Yes, he does"},
+      {q:"Does Ben want to be famous?", opts:["Yes, he does","No, he doesn't","Maybe"], ans:"No, he doesn't"},
+      {q:"What does Ben want to be when he's older?", opts:["A journalist","An explorer","A photographer"], ans:"An explorer"},
+      {q:"What does Ben like doing in his free time?", opts:["Playing football","Reading books","Watching TV"], ans:"Reading books"},
+      {q:"Who is Buster?", opts:["Ben's cat","Ben's dog","Ben's brother"], ans:"Ben's dog"},
+      {q:"Does Lucy like Buster?", opts:["No, she doesn't","Yes, she does","We don't know"], ans:"Yes, she does"},
+    ]},
+  // 4: Track 5 - Question forms practice
+  { track:5, title:"Grammar: Question Forms", page:"Student's Book p.5",
+    type:"match_q",
+    questions:["Do you like going to school?","Does Lucy like reading books?","Are you brave?","Where do you live?","When do you start school?","Is your life exciting?"],
+    types:["Yes/No (Do)","Yes/No (Does)","Yes/No (Are)","Wh- (Where)","Wh- (When)","Yes/No (Is)"]
+  },
+  // 5: Track 6 - Song comprehension
+  { track:6, title:"Song: The Explorers", page:"Student's Book p.6",
+    type:"gap_song",
+    sentences:[
+      {pre:"Does Ben like", gap:"adventure", post:"? Yes, he does!"},
+      {pre:"Is Lucy scared of anything? No, she's", gap:"not", post:"!"},
+      {pre:"Does she find much", gap:"treasure", post:"? Yes, a lot!"},
+      {pre:"Do they like", gap:"excitement", post:"? Yes, they do!"},
+    ]},
+  // 6: Track 7 - Song sing along (simple)
+  { track:7, title:"Song: Sing Along!", page:"Student's Book p.6",
+    type:"listen_done", text:"Listen to the song again and sing along! Try to remember the words about Ben and Lucy's adventures. Click 'Done' when you've finished singing." },
+  // 7: Track 8 - Interview with Lucy (past simple)
+  { track:8, title:"Listening: Interview with Lucy", page:"Student's Book p.7",
+    type:"mc", items:[
+      {q:"How did Ben and Lucy start their adventure?", opts:["They found an old book","They found a map","They met an explorer"], ans:"They found an old book"},
+      {q:"What was in the book?", opts:["A treasure map","A secret code","A letter"], ans:"A secret code"},
+      {q:"What did the clues help them find?", opts:["Numbers","Letters","Pictures"], ans:"Letters"},
+      {q:"What did they use the letters to do?", opts:["Write a story","Make a word to open a door","Send a message"], ans:"Make a word to open a door"},
+      {q:"Who were the two baddies?", opts:["Horax and Zelda","Horax and Zelzer","Max and Zelzer"], ans:"Horax and Zelzer"},
+      {q:"Who was Horax really?", opts:["A teacher","The school librarian, Mr Williams","A policeman"], ans:"The school librarian, Mr Williams"},
+    ]},
+  // 8: Track 9 - Past simple questions
+  { track:9, title:"Grammar: Past Simple Questions", page:"Student's Book p.7",
+    type:"form_q",
+    items:[
+      {q:"___ it dangerous?", opts:["Was","Were","Did"], ans:"Was"},
+      {q:"How ___ you find the statue?", opts:["was","did","were"], ans:"did"},
+      {q:"What ___ in the book?", opts:["was","did","were"], ans:"was"},
+      {q:"___ they want the book?", opts:["Was","Were","Did"], ans:"Did"},
+      {q:"___ you scared?", opts:["Was","Were","Did"], ans:"Were"},
+    ]},
+  // 9: Track 11 - Story comprehension
+  { track:11, title:"Story: The Map", page:"Student's Book pp.8-9",
+    type:"tf", intro:"Listen to the story about The Map and answer True or False.",
+    items:[
+      {q:"The golden statue is very old.", ans:true},
+      {q:"Mr Davidson gives the children a map from the museum.", ans:true},
+      {q:"The diamond symbol belongs to an old French king.", ans:false},
+      {q:"The map can help find more of the king's treasure.", ans:true},
+      {q:"The map says the lines together make a quiz.", ans:true},
+      {q:"Zelda wants to help the children find the treasure.", ans:false},
+    ]},
+];
+
+let current=0, done=new Array(EXERCISES.length).fill(false), spellState={};
+
+function init(){
+  buildTabs();
+  const main=document.getElementById('main'); main.innerHTML='';
+  EXERCISES.forEach((ex,i)=>{
+    const div=document.createElement('section');
+    div.className='ex'; div.id='ex-'+i;
+    div.innerHTML=`
+      <div class="ex-head"><div class="ex-num">${i+1}</div><div><h2>${ex.title}</h2><small>🎵 CD1 Track ${ex.track} · ${ex.page}</small></div></div>
+      <div class="ex-body">
+        <div class="audio-wrap"><div class="audio-label">🎧 Listen to Track ${ex.track}:</div><audio controls preload="none"><source src="audio/${ex.track}.mp3" type="audio/mpeg"></audio></div>
+        <div id="content-${i}"></div>
+        <div class="fb" id="fb-${i}"></div>
+        <div class="nav">
+          <button class="nav-btn" onclick="go(${i-1})" ${i===0?'disabled':''}>◀ Previous</button>
+          <button class="nav-btn fwd" onclick="${i===EXERCISES.length-1?'showResults()':'go('+(i+1)+')'}">${i===EXERCISES.length-1?'🏆 Results':'Next ▶'}</button>
+        </div>
+      </div>`;
+    main.appendChild(div);
+  });
+  EXERCISES.forEach((ex,i)=>renderEx(ex,i));
+  go(0);
+}
+
+function buildTabs(){
+  const t=document.getElementById('tabs');t.innerHTML='';
+  for(let i=0;i<EXERCISES.length;i++){
+    const b=document.createElement('button');
+    b.className='tab'+(i===current?' active':'')+(done[i]?' done':'');
+    b.textContent=i+1; b.onclick=()=>go(i); t.appendChild(b);
+  }
+}
+
+function go(n){if(n<0||n>=EXERCISES.length)return;document.querySelectorAll('.ex').forEach(e=>e.classList.remove('show'));document.getElementById('ex-'+n).classList.add('show');document.getElementById('results').style.display='none';current=n;buildTabs();window.scrollTo({top:0,behavior:'smooth'});}
+function setFb(i,cls,msg){const el=document.getElementById('fb-'+i);el.className='fb '+cls;el.innerHTML=msg;}
+function markDone(i){if(!done[i]){done[i]=true;document.getElementById('sc').textContent=done.filter(Boolean).length;buildTabs();}}
+
+function renderEx(ex,i){
+  const el=document.getElementById('content-'+i);
+  if(ex.type==='spell') renderSpell(ex,i,el);
+  else if(ex.type==='tf') renderTF(ex,i,el);
+  else if(ex.type==='mc') renderMC(ex,i,el);
+  else if(ex.type==='match_q') renderMatchQ(ex,i,el);
+  else if(ex.type==='gap_song') renderGapSong(ex,i,el);
+  else if(ex.type==='listen_done') renderListenDone(ex,i,el);
+  else if(ex.type==='form_q') renderFormQ(ex,i,el);
+}
+
+// ── SPELL ──
+function renderSpell(ex,i,el){
+  spellState[i]={wordIdx:0,slotIdx:0};
+  el.innerHTML=`<div class="instruct">Listen to the words, then spell each one by clicking the letters. Complete all ${ex.words.length} words!</div>
+    <div style="text-align:center;margin-bottom:8px;font-size:.85em;color:#888;">Word <span id="sp-c-${i}">1</span> of ${ex.words.length}</div>
+    <div id="sp-w-${i}" style="text-align:center;font-size:1.6em;margin-bottom:6px;">🎯 Word 1</div>
+    <div class="spell-area" id="sp-s-${i}"></div>
+    <div class="letter-bank" id="sp-b-${i}"></div>
+    <button class="btn" onclick="spSkip(${i})">Skip →</button>`;
+  loadSpWord(ex,i);
+}
+function loadSpWord(ex,i){
+  const st=spellState[i], word=ex.words[st.wordIdx]; st.slotIdx=0;
+  document.getElementById('sp-c-'+i).textContent=st.wordIdx+1;
+  document.getElementById('sp-w-'+i).textContent='🎯 Word '+(st.wordIdx+1);
+  const sEl=document.getElementById('sp-s-'+i); sEl.innerHTML='';
+  let idx=0;
+  for(let c of word){
+    if(c===' '){const d=document.createElement('div');d.className='spell-slot space';sEl.appendChild(d);}
+    else{const d=document.createElement('div');d.className='spell-slot';d.id=`ss${i}-${idx}`;sEl.appendChild(d);idx++;}
+  }
+  const letters=word.replace(/ /g,'').split('');
+  const extras='abcdefghijklmnopqrstuvwxyz'.split('').filter(l=>!letters.includes(l)).sort(()=>Math.random()-.5).slice(0,5);
+  const bank=[...letters,...extras].sort(()=>Math.random()-.5);
+  const bEl=document.getElementById('sp-b-'+i); bEl.innerHTML='';
+  bank.forEach((l,li)=>{
+    const b=document.createElement('button');b.className='letter-btn';b.textContent=l.toUpperCase();b.id=`lb${i}-${li}`;
+    b.onclick=()=>spPick(ex,i,l,li); bEl.appendChild(b);
+  });
+}
+function spPick(ex,i,letter,btnIdx){
+  const st=spellState[i], word=ex.words[st.wordIdx], plain=word.replace(/ /g,'');
+  if(st.slotIdx>=plain.length)return;
+  const slot=document.getElementById(`ss${i}-${st.slotIdx}`);
+  if(letter===plain[st.slotIdx]){
+    slot.textContent=letter.toUpperCase();slot.className='spell-slot filled';
+    document.getElementById(`lb${i}-${btnIdx}`).classList.add('used');st.slotIdx++;
+    if(st.slotIdx>=plain.length){document.getElementById('sp-w-'+i).textContent='✅ '+word;setTimeout(()=>spNext(ex,i),700);}
+  } else {slot.className='spell-slot wrong';setTimeout(()=>{slot.className='spell-slot';},400);}
+}
+function spSkip(i){spNext(EXERCISES[i],i);}
+function spNext(ex,i){const st=spellState[i];st.wordIdx++;if(st.wordIdx>=ex.words.length){setFb(i,'ok','🎉 All words completed!');markDone(i);}else loadSpWord(ex,i);}
+
+// ── TRUE/FALSE ──
+function renderTF(ex,i,el){
+  let h=`<div class="instruct">${ex.intro}</div>`;
+  ex.items.forEach((item,qi)=>{h+=`<div class="tf-row" id="tf${i}-${qi}"><div class="tf-q">${qi+1}. ${item.q}</div><button class="tf-btn tf-t" onclick="tfP(${i},${qi},true,this)">T</button><button class="tf-btn tf-f" onclick="tfP(${i},${qi},false,this)">F</button></div>`;});
+  h+=`<button class="btn" onclick="chkTF(${i})">✓ Check</button>`;
+  el.innerHTML=h;
+}
+function tfP(i,qi,val,btn){const row=document.getElementById(`tf${i}-${qi}`);row.querySelectorAll('.tf-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');row.dataset.ans=val;}
+function chkTF(i){
+  const ex=EXERCISES[i];let ok=0;
+  ex.items.forEach((item,qi)=>{const row=document.getElementById(`tf${i}-${qi}`);if(row.dataset.ans===undefined)return;if((row.dataset.ans==='true')===item.ans){row.classList.add('ok');ok++;}else row.classList.add('bad');});
+  if(ok===ex.items.length){setFb(i,'ok','🎉 All correct!');markDone(i);}else setFb(i,'part',`👍 ${ok}/${ex.items.length} correct.`);
+}
+
+// ── MULTIPLE CHOICE ──
+function renderMC(ex,i,el){
+  let h=`<div class="instruct">Listen and choose the correct answer.</div>`;
+  ex.items.forEach((item,qi)=>{
+    h+=`<div class="mc-item" id="mc${i}-${qi}"><div class="mc-q">${qi+1}. ${item.q}</div><div class="mc-opts">`;
+    item.opts.forEach(o=>{h+=`<button class="mc-opt" onclick="mcP(${i},${qi},this)">${o}</button>`;});
+    h+=`</div></div>`;
+  });
+  h+=`<button class="btn" onclick="chkMC(${i})">✓ Check</button>`;
+  el.innerHTML=h;
+}
+function mcP(i,qi,btn){const row=document.getElementById(`mc${i}-${qi}`);row.querySelectorAll('.mc-opt').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');row.dataset.ans=btn.textContent;}
+function chkMC(i){
+  const ex=EXERCISES[i];let ok=0;
+  ex.items.forEach((item,qi)=>{const row=document.getElementById(`mc${i}-${qi}`);row.querySelectorAll('.mc-opt').forEach(b=>{if(b.textContent===item.ans)b.classList.add('right');if(b.classList.contains('sel')&&b.textContent!==item.ans)b.classList.add('wrong');});if(row.dataset.ans===item.ans)ok++;});
+  if(ok===ex.items.length){setFb(i,'ok',`🎉 Perfect! ${ok}/${ex.items.length}`);markDone(i);}else setFb(i,'part',`👍 ${ok}/${ex.items.length} correct.`);
+}
+
+// ── MATCH QUESTIONS ──
+function renderMatchQ(ex,i,el){
+  let selL=null;
+  const shuffledR=[...ex.types].sort(()=>Math.random()-.5);
+  let h=`<div class="instruct">Match each question with its type. Click a question (blue), then click its type (yellow).</div><div class="match-grid"><div class="m-left">`;
+  ex.questions.forEach((q,qi)=>{h+=`<div class="m-btn left" id="mql${i}-${qi}" data-idx="${qi}" onclick="mqlClick(${i},${qi})">${q}</div>`;});
+  h+=`</div><div class="m-right">`;
+  shuffledR.forEach((t,ti)=>{h+=`<div class="m-btn right" id="mqr${i}-${ti}" data-type="${t}" onclick="mqrClick(${i},${ti})">${t}</div>`;});
+  h+=`</div></div><button class="btn" onclick="chkMatchQ(${i})">✓ Check</button>`;
+  el.innerHTML=h;
+  window['mqSel'+i]=null; window['mqMatched'+i]=new Set();
+}
+function mqlClick(i,qi){
+  const el=document.getElementById(`mql${i}-${qi}`);if(el.classList.contains('done'))return;
+  document.querySelectorAll(`[id^=mql${i}]`).forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel'); window['mqSel'+i]=qi;
+}
+function mqrClick(i,ti){
+  const selIdx=window['mqSel'+i]; if(selIdx===null)return;
+  const ex=EXERCISES[i];
+  const lEl=document.getElementById(`mql${i}-${selIdx}`);
+  const rEl=document.getElementById(`mqr${i}-${ti}`);
+  if(rEl.classList.contains('done'))return;
+  if(ex.types[selIdx]===rEl.dataset.type){
+    lEl.classList.replace('sel','done');rEl.classList.add('done');
+    window['mqMatched'+i].add(selIdx);
+    if(window['mqMatched'+i].size===ex.questions.length){setFb(i,'ok','🎉 All matched correctly!');markDone(i);}
+  } else {lEl.classList.remove('sel');}
+  window['mqSel'+i]=null;
+}
+function chkMatchQ(i){const n=window['mqMatched'+i].size,t=EXERCISES[i].questions.length;if(n===t){setFb(i,'ok','🎉 Perfect!');markDone(i);}else setFb(i,'part',`👍 ${n}/${t} matched.`);}
+
+// ── GAP SONG ──
+function renderGapSong(ex,i,el){
+  const bank=ex.sentences.map(s=>s.gap).sort(()=>Math.random()-.5);
+  let h=`<div class="instruct">Listen to the song and fill in the missing words.</div>`;
+  h+=`<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;">${bank.map(w=>`<button class="wb-btn" id="gs${i}-${w}" onclick="gsSel(${i},'${w}',this)">${w}</button>`).join('')}</div>`;
+  ex.sentences.forEach((s,si)=>{h+=`<div class="gap-sentence">${si+1}. ${s.pre} <input class="gap-input" id="gsi${i}-${si}" data-ans="${s.gap}" readonly placeholder="___" onclick="gsFill(${i},${si})"> ${s.post}</div>`;});
+  h+=`<button class="btn" onclick="chkGS(${i})">✓ Check</button>`;
+  el.innerHTML=h; window['gsWord'+i]=null;
+}
+function gsSel(i,w,btn){document.querySelectorAll(`[id^=gs${i}-]`).forEach(b=>b.classList.remove('sel'));window['gsWord'+i]={w,btn};btn.classList.add('sel');}
+function gsFill(i,si){const s=window['gsWord'+i];if(!s)return;const inp=document.getElementById(`gsi${i}-${si}`);inp.value=s.w;s.btn.classList.add('used');s.btn.classList.remove('sel');window['gsWord'+i]=null;}
+function chkGS(i){
+  const ex=EXERCISES[i];let ok=0;
+  ex.sentences.forEach((s,si)=>{const inp=document.getElementById(`gsi${i}-${si}`);if(inp.value.toLowerCase()===s.gap.toLowerCase()){inp.classList.add('ok');ok++;}else inp.classList.add('bad');});
+  if(ok===ex.sentences.length){setFb(i,'ok','🎉 All correct!');markDone(i);}else setFb(i,'part',`👍 ${ok}/${ex.sentences.length} correct.`);
+}
+
+// ── LISTEN DONE ──
+function renderListenDone(ex,i,el){
+  el.innerHTML=`<div class="instruct">${ex.text}</div><button class="btn" onclick="markDone(${i});setFb(${i},'ok','✅ Great singing! Keep practising!')">✓ Done!</button>`;
+}
+
+// ── FORM QUESTIONS (past simple) ──
+function renderFormQ(ex,i,el){
+  let h=`<div class="instruct">Choose the correct question word to complete each past simple question.</div>`;
+  ex.items.forEach((item,qi)=>{
+    h+=`<div class="mc-item" id="fq${i}-${qi}"><div class="mc-q">${qi+1}. ${item.q}</div><div class="mc-opts">`;
+    item.opts.forEach(o=>{h+=`<button class="mc-opt" onclick="fqP(${i},${qi},this)">${o}</button>`;});
+    h+=`</div></div>`;
+  });
+  h+=`<button class="btn" onclick="chkFQ(${i})">✓ Check</button>`;
+  el.innerHTML=h;
+}
+function fqP(i,qi,btn){const row=document.getElementById(`fq${i}-${qi}`);row.querySelectorAll('.mc-opt').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');row.dataset.ans=btn.textContent;}
+function chkFQ(i){
+  const ex=EXERCISES[i];let ok=0;
+  ex.items.forEach((item,qi)=>{const row=document.getElementById(`fq${i}-${qi}`);row.querySelectorAll('.mc-opt').forEach(b=>{if(b.textContent===item.ans)b.classList.add('right');if(b.classList.contains('sel')&&b.textContent!==item.ans)b.classList.add('wrong');});if(row.dataset.ans===item.ans)ok++;});
+  if(ok===ex.items.length){setFb(i,'ok','🎉 Perfect!');markDone(i);}else setFb(i,'part',`👍 ${ok}/${ex.items.length} correct.`);
+}
+
+// ── RESULTS ──
+function showResults(){
+  document.querySelectorAll('.ex').forEach(e=>e.classList.remove('show'));
+  const res=document.getElementById('results');res.style.display='block';
+  const sc=done.filter(Boolean).length,p=sc/EXERCISES.length;
+  const [icon,title,stars,msg]=p>=.9?['🏆','Superstar Explorer!',5,'Amazing work!']:p>=.7?['🌟','Great Job!',4,'Really well done!']:p>=.5?['😊','Good Effort!',3,'Keep practising!']:p>=.25?['👍','Keep Going!',2,'Try again!']:['💪','Don\'t Give Up!',1,'Listen again and try!'];
+  document.getElementById('ri').textContent=icon;
+  document.getElementById('rt').textContent=title;
+  document.getElementById('rs').textContent='⭐'.repeat(stars)+'☆'.repeat(5-stars);
+  document.getElementById('rsc').textContent=`${sc} / ${EXERCISES.length} exercises completed`;
+  document.getElementById('rm').textContent=msg;
+}
+
+init();
+</script>
+</body>
+</html>
